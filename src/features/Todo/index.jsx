@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
 
 TodoFeature.propTypes = {
 
@@ -13,11 +14,11 @@ function TodoFeature(props) {
             title: 'Todo 1',
             status: 'New'
         },
-        {
-            id: 2,
-            title: 'Todo 2',
-            status: 'Completed'
-        },
+        // {
+        //     id: 2,
+        //     title: 'Todo 2',
+        //     status: 'Completed'
+        // },
         {
             id: 3,
             title: 'Todo 3',
@@ -43,30 +44,43 @@ function TodoFeature(props) {
         setTodoList(newTodoList);
     }
 
-    const handleShowAllClick = () => {
-        setFilterStatus('all');
-    }
+    // const handleShowAllClick = () => {
+    //     setFilterStatus('all');
+    // }
 
-    const handleShowCompletedClick = () => {
-        setFilterStatus('Completed');
-    }
+    // const handleShowCompletedClick = () => {
+    //     setFilterStatus('Completed');
+    // }
 
-    const handleShowNewClick = () => {
-        setFilterStatus('New');
-    }
+    // const handleShowNewClick = () => {
+    //     setFilterStatus('New');
+    // }
 
     const renderTodoList = todoList.filter(todo => filterStatus === 'all' || filterStatus === todo.status)
+    const handleTodoFormSubmit = (formValues) => {
+        // console.log('Form submit: ', formValues)
+        const newTodo = {
+            id: todoList.reduce((max, todo) => todo.id > max ? todo.id + 1 : max + 1),
+            ...formValues,
+        }
+
+        const newTodoList = [...todoList];
+        newTodoList.push(newTodo);
+        setTodoList(newTodoList);
+    };
+
 
     return (
         <div>
             <h3>Todo List</h3>
             <TodoList todoList={renderTodoList} onTodoClick={handleTodoClick}/>
 
-            <div>
+            {/* <div>
                 <button onClick={handleShowAllClick}>Show All</button>
                 <button onClick={handleShowCompletedClick}>Show Completed</button>
                 <button onClick={handleShowNewClick}>Show New</button>
-            </div>
+            </div> */}
+            <TodoForm onSubmit={handleTodoFormSubmit} />
         </div>
     );
 }
