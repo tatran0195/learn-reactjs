@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-import { NavLink } from 'react-router-dom';
 import productApi from './api/productApi';
 import './App.scss';
 import NotFound from './components/NotFound';
 import AlbumFeature from './features/Album';
 import CounterFeature from './features/Counter';
+import Header from './components/Header';
 import TodoFeature from './features/Todo';
 
 function App() {
@@ -24,10 +24,9 @@ function App() {
     return (
         <div className="App">
             {/* always display in all routes */}
-            Header
             {/* Link and NavLink use to navigate to another page */}
             {/* Use NavLink for customizing style of activeClassName{default=active} => Menu*/}
-            <p>
+            {/* <p>
                 <NavLink to="/todos">Todo</NavLink>
             </p>
             <p>
@@ -35,7 +34,8 @@ function App() {
             </p>
             <p>
                 <NavLink to="/counters">Counter</NavLink>
-            </p>
+            </p> */}
+            <Header />
             {/* Switch run one-by-one and render the first matched path then exit, if not, render all matched route */}
             <Switch>
                 <Redirect from="/home" to="/" exact />
@@ -50,7 +50,6 @@ function App() {
                 <Route component={NotFound} />
             </Switch>
             {/* always display in all routes */}
-            Footer
         </div>
     );
 }
