@@ -5,6 +5,7 @@ import productApi from './api/productApi';
 import './App.scss';
 import NotFound from './components/NotFound';
 import AlbumFeature from './features/Album';
+import CounterFeature from './features/Counter';
 import TodoFeature from './features/Todo';
 
 function App() {
@@ -32,13 +33,18 @@ function App() {
             <p>
                 <NavLink to="/albums">Album</NavLink>
             </p>
+            <p>
+                <NavLink to="/counters">Counter</NavLink>
+            </p>
             {/* Switch run one-by-one and render the first matched path then exit, if not, render all matched route */}
             <Switch>
                 <Redirect from="/home" to="/" exact />
                 {/* <Redirect from="/post-list/:postId" to="/posts/:postId" exact /> */}
 
-                <Route path="/todos" component={TodoFeature} />
-                <Route path="/albums" component={AlbumFeature} />
+                <Route path="/" component={TodoFeature} exact />
+                <Route path="/todos" component={TodoFeature} exact />
+                <Route path="/albums" component={AlbumFeature} exact />
+                <Route path="/counters" component={CounterFeature} exact />
 
                 {/* If don't specify the path, it means if all above route do not match, it will run */}
                 <Route component={NotFound} />

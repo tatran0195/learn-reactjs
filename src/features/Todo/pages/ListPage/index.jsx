@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import TodoList from '../../components/TodoList';
 import queryString from 'query-string';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 import TodoForm from '../../components/TodoForm';
-import { TextField } from '@material-ui/core';
+import TodoList from '../../components/TodoList';
 
 ListPage.propTypes = {};
 
@@ -65,6 +64,7 @@ function ListPage(props) {
             pathname: match.path,
             search: queryString.stringify(queryParams),
         });
+        console.log(history);
     };
 
     const handleShowCompletedClick = () => {

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router';
+import AlbumForm from '../../components/AlbumForm';
 import AlbumList from '../../components/AlbumList';
 
 AlbumListPage.propTypes = {};
 
 function AlbumListPage(props) {
-    const albumList = [
+    const initAlbumList = [
         {
             id: 1,
             name: 'Nhạc Hoa Thịnh Hành',
@@ -24,10 +26,26 @@ function AlbumListPage(props) {
                 'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/cover/c/5/5/f/c55fafaf6df6af993e474c6413546156.jpg',
         },
     ];
+
+    const [albumList, setAlbumList] = useState(initAlbumList);
+
+    const handleOnClick = (values) => {
+        const maxId = albumList.reduce((max, album) => (album.id > max ? album.id : max));
+        const newAlbum = {
+            id: maxId + 1,
+            name: values.name,
+            thumbnailUrl: values.thumbnailUrl,
+        };
+
+        const newAlbumList = [...albumList, newAlbum];
+        setAlbumList(newAlbumList);
+    };
+
     return (
         <div>
             <h2>Lists of songs</h2>
             <AlbumList albumList={albumList} />
+            <AlbumForm onClick={handleOnClick} />
         </div>
     );
 }
