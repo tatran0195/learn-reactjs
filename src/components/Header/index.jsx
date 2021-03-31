@@ -1,19 +1,19 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Menu, MenuItem } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import { AccountCircle, Close } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
+import Login from 'features/Auth/components/Login';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Register from '../../features/Auth/components/Register';
+import Register from 'features/Auth/components/Register';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,11 +29,26 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'None',
         color: 'white',
     },
+    closeButton: {
+        position: 'absolute',
+        top: theme.spacing(1),
+        right: theme.spacing(1),
+        color: theme.palette.grey[500],
+        zIndex: 1,
+    },
 }));
+const MODE = {
+    LOGIN: 'login',
+    REGISTER: 'register',
+};
 
 export default function Header() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const loggedInUser = useSelector((state) => state.user.current);
+    const isLoggedIn = !!loggedInUser.id;
+    const [mode, setMode] = useState(MODE.LOGIN);
+    const [open, setOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -43,6 +58,12 @@ export default function Header() {
         setOpen(false);
     };
 
+    const handleUserClick = (e) => {
+        setAnchorEl(e.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -65,11 +86,34 @@ export default function Header() {
                     <NavLink to="/counters" className={classes.link}>
                         <Button color="inherit">Counters</Button>
                     </NavLink>
-                    <Button color="inherit" onClick={handleClickOpen}>
-                        Register
-                    </Button>
+
+                    {!isLoggedIn && (
+                        <Button color="inherit" onClick={handleClickOpen}>
+                            Login
+                        </Button>
+                    )}
+
+                    {isLoggedIn && (
+                        <IconButton color="inherit" onClick={handleUserClick}>
+                            <AccountCircle />
+                        </IconButton>
+                    )}
                 </Toolbar>
             </AppBar>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleCloseMenu}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                getContentAnchorEl={null}
+            >
+                <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
+                <MenuItem onClick={handleCloseMenu}>My Account</MenuItem>
+                <MenuItem onClick={handleCloseMenu}>Logout</MenuItem>
+            </Menu>
             <Dialog
                 disableBackdropClick
                 disableEscapeKeyDown
@@ -78,13 +122,32 @@ export default function Header() {
                 aria-labelledby="form-dialog-title"
             >
                 <DialogContent>
-                    <Register />
+                    {mode === MODE.REGISTER && (
+                        <>
+                            <Register closeDialog={handleClose} />
+
+                            <Box textAlign="center">
+                                <Button color="primary" onClick={() => setMode(MODE.LOGIN)}>
+                                    Already have an account. Login here
+                                </Button>
+                            </Box>
+                        </>
+                    )}
+                    {mode === MODE.LOGIN && (
+                        <>
+                            <Login closeDialog={handleClose} />
+
+                            <Box textAlign="center">
+                                <Button color="primary" onClick={() => setMode(MODE.REGISTER)}>
+                                    Don't have an account. Register here
+                                </Button>
+                            </Box>
+                        </>
+                    )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                </DialogActions>
+                <IconButton className={classes.closeButton} onClick={handleClose}>
+                    <Close />
+                </IconButton>
             </Dialog>
         </div>
     );
