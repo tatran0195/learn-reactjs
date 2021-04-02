@@ -13,7 +13,8 @@ import Login from 'features/Auth/components/Login';
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Register from 'features/Auth/components/Register';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from 'features/Auth/userSlice';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,6 +44,7 @@ const MODE = {
 };
 
 export default function Header() {
+    const dispatch = useDispatch();
     const classes = useStyles();
     const loggedInUser = useSelector((state) => state.user.current);
     const isLoggedIn = !!loggedInUser.id;
@@ -64,6 +66,13 @@ export default function Header() {
     const handleCloseMenu = () => {
         setAnchorEl(null);
     };
+
+    const handleLogOutClick = () => {
+        const action = logout();
+        dispatch(action);
+        handleCloseMenu();
+    };
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -85,6 +94,9 @@ export default function Header() {
                     </NavLink>
                     <NavLink to="/counters" className={classes.link}>
                         <Button color="inherit">Counters</Button>
+                    </NavLink>
+                    <NavLink to="/products" className={classes.link}>
+                        <Button color="inherit">Products</Button>
                     </NavLink>
 
                     {!isLoggedIn && (
@@ -112,7 +124,7 @@ export default function Header() {
             >
                 <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
                 <MenuItem onClick={handleCloseMenu}>My Account</MenuItem>
-                <MenuItem onClick={handleCloseMenu}>Logout</MenuItem>
+                <MenuItem onClick={handleLogOutClick}>Logout</MenuItem>
             </Menu>
             <Dialog
                 disableBackdropClick
@@ -121,6 +133,9 @@ export default function Header() {
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
             >
+                <IconButton className={classes.closeButton} onClick={handleClose}>
+                    <Close />
+                </IconButton>
                 <DialogContent>
                     {mode === MODE.REGISTER && (
                         <>
@@ -145,9 +160,6 @@ export default function Header() {
                         </>
                     )}
                 </DialogContent>
-                <IconButton className={classes.closeButton} onClick={handleClose}>
-                    <Close />
-                </IconButton>
             </Dialog>
         </div>
     );

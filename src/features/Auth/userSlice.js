@@ -31,19 +31,29 @@ export const userSlice = createSlice({
         current: JSON.parse(localStorage.getItem(StorageKeys.USER)) || {},
         settings: {},
     },
-    reducers: {},
+    reducers: {
+        logout(state) {
+            // clear local storage
+            localStorage.removeItem(StorageKeys.USER);
+            localStorage.removeItem(StorageKeys.TOKEN);
+
+            // reset current state
+            state.current = {};
+        },
+    },
     extraReducers: {
-        [register.fullfilled]: (state, action) => {
+        [register.fulfilled]: (state, action) => {
             // update the current state
             state.current = action.payload;
         },
-        [login.fullfilled]: (state, action) => {
+        [login.fulfilled]: (state, action) => {
             // update the current state
             state.current = action.payload;
         },
     },
 });
 
-export const { reducer } = userSlice;
+export const { actions, reducer } = userSlice;
+export const { logout } = actions;
 
 export default reducer;

@@ -7,6 +7,7 @@ import AlbumFeature from './features/Album';
 import CounterFeature from './features/Counter';
 import Header from './components/Header';
 import TodoFeature from './features/Todo';
+import ProductFeature from 'features/Product';
 
 function App() {
     useEffect(() => {
@@ -45,6 +46,7 @@ function App() {
                 <Route path="/todos" component={TodoFeature} exact />
                 <Route path="/albums" component={AlbumFeature} exact />
                 <Route path="/counters" component={CounterFeature} exact />
+                <Route path="/products" component={ProductFeature} exact />
 
                 {/* If don't specify the path, it means if all above route do not match, it will run */}
                 <Route component={NotFound} />
